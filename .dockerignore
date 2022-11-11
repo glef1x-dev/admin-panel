@@ -1,0 +1,8 @@
+
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+**/.next/*
+**/.turbo/*
+**/node_modules/*
+**/Dockerfile*
