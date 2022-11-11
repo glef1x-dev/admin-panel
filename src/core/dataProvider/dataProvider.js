@@ -18,7 +18,7 @@ function createOptionsFromJWTToken() {
 }
 
 const dataProvider = drfProvider(
-    "http://localhost:8000/api/v1",
+    API_URL,
     (url, options = {}) => {
         return fetchUtils
             .fetchJson(url, Object.assign(options, createOptionsFromJWTToken()))

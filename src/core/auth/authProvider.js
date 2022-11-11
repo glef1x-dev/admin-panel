@@ -21,7 +21,7 @@ const JWTAuthProvider = {
     // Fields
     cookies: new Cookies(),
     axiosInstance: axios.create({
-        baseURL: "http://localhost:8000/api/v1/",
+        baseURL: API_URL,
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
