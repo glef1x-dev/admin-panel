@@ -1,20 +1,27 @@
 import Cookies from "universal-cookie";
 import axios from "axios";
 import * as jose from "jose";
+import {CookieSetOptions} from "universal-cookie/cjs/types";
 
 // TODO save it in memory of app, not in cookie
-export const JWT_ACCESS_TOKEN_COOKIE_NAME = "_-act";
-export const JWT_REFRESH_TOKEN_COOKIE_NAME = "_-rft";
+export const JWT_ACCESS_TOKEN_COOKIE_NAME = "access_token";
+export const JWT_REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
-const SECURE_COOKIE_PROPERTIES = {
+const SECURE_COOKIE_PROPERTIES: CookieSetOptions = {
     path: "/",
-    sameSite: "strict",
+    sameSite: 'strict' as const,
     // httpOnly: true, // TODO
     // secure: true, // TODO
 };
 
-function getExpirationDateFromJWTToken(token) {
-    return new Date(jose.decodeJwt(token).exp * 1000);
+function getExpirationDateFromJWTToken(token: string): Date {
+    const expireAt = jose.decodeJwt(token).exp;
+    if (expireAt === undefined) {
+        console.warn("Expiration time on the jwt access token is not defined.")
+        return new Date();
+    }
+
+    return new Date(expireAt * 1000);
 }
 
 const JWTAuthProvider = {
@@ -28,7 +35,7 @@ const JWTAuthProvider = {
         },
     }),
     // Methods
-    async login({username, password}) {
+    async login({username, password}: { username: string, password: string }) {
         let response;
 
         try {
@@ -40,7 +47,11 @@ const JWTAuthProvider = {
                 })
             );
         } catch (e) {
-            return Promise.reject({message: e.response.data.message})
+            console.error(e)
+            if (axios.isAxiosError(e)) {
+                return Promise.reject({message: e.response?.data.message})
+            }
+            return Promise.reject({message: "Unknown error"})
         }
 
         this.cookies.set(JWT_ACCESS_TOKEN_COOKIE_NAME, response.data.access, {
@@ -53,7 +64,7 @@ const JWTAuthProvider = {
         });
     },
     // when the dataProvider returns an error, check if this is an authentication error
-    async checkError(error) {
+    async checkError(error: any) {
         const status = error.status;
         if (status === 401 || status === 403) {
             await this.logout();
@@ -88,8 +99,6 @@ const JWTAuthProvider = {
         const refreshToken = this.cookies.remove(JWT_REFRESH_TOKEN_COOKIE_NAME)
         this.cookies.remove(JWT_ACCESS_TOKEN_COOKIE_NAME);
         this.cookies.remove(JWT_REFRESH_TOKEN_COOKIE_NAME);
-
-        await this.blackListRefreshToken(refreshToken);
         return Promise.resolve();
     },
     async getIdentity() {
@@ -104,7 +113,7 @@ const JWTAuthProvider = {
     },
     getPermissions: () => Promise.resolve(""),
 
-    async verifyJWTToken(token) {
+    async verifyJWTToken(token: string) {
         return this.axiosInstance.post(
             "/auth/token/verify/",
             JSON.stringify({
@@ -113,7 +122,7 @@ const JWTAuthProvider = {
         );
     },
 
-    async refreshToken(refreshToken) {
+    async refreshToken(refreshToken: string) {
         const response = await this.axiosInstance.post(
             "/auth/token/refresh/",
             JSON.stringify({
@@ -122,14 +131,15 @@ const JWTAuthProvider = {
         );
         return response.data.access;
     },
-    async blackListRefreshToken(refreshToken) {
+    async blackListRefreshToken(refreshToken: string) {
         try {
             await this.axiosInstance.post(
-            "/auth/token/blacklist/",
-            JSON.stringify({
-                refresh: refreshToken
-            })
-        )} catch(err) {
+                "/auth/token/blacklist/",
+                JSON.stringify({
+                    refresh: refreshToken
+                })
+            )
+        } catch (err) {
             // TODO: log this error, for now just supress
         }
     }

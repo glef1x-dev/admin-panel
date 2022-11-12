@@ -123,7 +123,7 @@ export default function drfProvider(
             ).then((responses) => ({data: responses.map(({json}) => json.id)})),
 
         create: async (resource, params) => {
-            const {json} = await httpClient(`${apiUrl}/${optionsMapping.endpoint}/`, {
+            const {json} = await httpClient(`${apiUrl}/${getOptions(resource).endpoint}/`, {
                 method: "POST",
                 body: JSON.stringify(params.data),
             });
