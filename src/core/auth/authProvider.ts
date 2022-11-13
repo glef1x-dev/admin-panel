@@ -80,7 +80,7 @@ const JWTAuthProvider = {
         } catch (error) {
             const refreshToken = this.cookies.get(JWT_REFRESH_TOKEN_COOKIE_NAME);
             if (!refreshToken) {
-                return Promise.reject('Failed to obtain an access or refresh token.');
+                return Promise.reject('Failed to authorize. Login required.');
             }
 
             const newAccessToken = await this.refreshToken(refreshToken);
