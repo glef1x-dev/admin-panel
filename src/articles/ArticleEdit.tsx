@@ -10,7 +10,7 @@ export const ArticleEdit = () => {
                 <DateInput source="created" label="Creation date" defaultValue={new Date()}/>
                 <MarkdownInput options={{
                     height: "600px"
-                }}  label="body" source="Body"/>
+                }}  label="body" source="body"/>
             </SimpleForm>
         </Edit>
     );

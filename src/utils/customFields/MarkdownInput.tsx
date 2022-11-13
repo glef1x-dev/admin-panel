@@ -6,14 +6,16 @@ import codeSyntaxHighlight
     from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+import {useRef} from "react";
 
 type MarkdownInputTypes = {
     options?: Omit<EditorProps, "onChange" | "onBlur">
 } & InputProps
 
 export default function MarkdownInput(props: MarkdownInputTypes) {
-    const {onChange, onBlur} = props;
+    const {onChange, onBlur, options, ...other} = props;
     const record = useRecordContext();
+    const editorRef = useRef<Editor>(null);
     const initialValue = record?.[props.source.toLowerCase()] ?? ""
 
     const {
@@ -24,13 +26,23 @@ export default function MarkdownInput(props: MarkdownInputTypes) {
         // useInput will call the provided onChange and onBlur in addition to the default needed by react-hook-form.
         onChange,
         onBlur,
-        ...props
+        ...other
     });
+
+
+    function handleChange() {
+        const md = editorRef?.current
+            ? editorRef?.current.getInstance().getMarkdown()
+            : "";
+        field.onChange(md);
+    }
 
     return (
         <Editor
-            {...field}
-            {...props.options}
+            onChange={handleChange}
+            onBlur={field.onBlur}
+            {...options}
+            ref={editorRef}
             initialValue={initialValue}
             plugins={[
                 codeSyntaxHighlight
