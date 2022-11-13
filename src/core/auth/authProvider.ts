@@ -10,8 +10,7 @@ export const JWT_REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 const SECURE_COOKIE_PROPERTIES: CookieSetOptions = {
     path: "/",
     sameSite: 'strict' as const,
-    // httpOnly: true, // TODO
-    // secure: true, // TODO
+    secure: true,
 };
 
 function getExpirationDateFromJWTToken(token: string): Date {
