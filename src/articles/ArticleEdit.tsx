@@ -8,7 +8,9 @@ export const ArticleEdit = () => {
                 <TextInput source="title" label="Title"/>
                 <TextInput source="description" label="Article description"/>
                 <DateInput source="created" label="Creation date" defaultValue={new Date()}/>
-                <MarkdownInput label="body" source="Body"/>
+                <MarkdownInput options={{
+                    height: "600px"
+                }}  label="body" source="Body"/>
             </SimpleForm>
         </Edit>
     );

@@ -65,11 +65,7 @@ const JWTAuthProvider = {
     },
     // when the dataProvider returns an error, check if this is an authentication error
     async checkError(error: any) {
-        const status = error.status;
-        if (status === 401 || status === 403) {
-            await this.logout();
-            return Promise.reject();
-        }
+        await this.checkAuth();
         return Promise.resolve();
     },
     /**
@@ -85,7 +81,7 @@ const JWTAuthProvider = {
         } catch (error) {
             const refreshToken = this.cookies.get(JWT_REFRESH_TOKEN_COOKIE_NAME);
             if (!refreshToken) {
-                return Promise.reject();
+                return Promise.reject('Failed to obtain an access or refresh token.');
             }
 
             const newAccessToken = await this.refreshToken(refreshToken);

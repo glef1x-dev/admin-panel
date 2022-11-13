@@ -17,6 +17,7 @@ const App = () => (
             show={ArticleShow}
             create={ArticleCreate}
         />
+
     </Admin>
 );
 

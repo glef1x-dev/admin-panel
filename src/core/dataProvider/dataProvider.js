@@ -2,6 +2,7 @@ import {fetchUtils} from "ra-core";
 import Cookies from "universal-cookie";
 import drfProvider from "./drf/index";
 import {JWT_ACCESS_TOKEN_COOKIE_NAME} from "../auth/authProvider";
+import imageUploadDataProvider from "../../utils/imageUploadDataProvider";
 
 const cookies = new Cookies();
 
@@ -19,7 +20,7 @@ function createOptionsFromJWTToken() {
     };
 }
 
-const dataProvider = drfProvider(
+const dataProvider = imageUploadDataProvider(drfProvider(
     API_URL,
     (url, options = {}) => {
         return fetchUtils
@@ -34,6 +35,6 @@ const dataProvider = drfProvider(
             idFieldName: "slug"
         }
     }
-);
+));
 
 export default dataProvider;

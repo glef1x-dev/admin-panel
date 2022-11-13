@@ -20,7 +20,8 @@ export default defineConfig({
                         "moment",
                         "query-string",
                         "universal-cookie",
-                        "@uiw/react-md-editor",
+                        "@toast-ui/react-editor",
+                        "@toast-ui/editor"
                     ],
                     core: [
                         "ra-core",
