@@ -91,9 +91,10 @@ const JWTAuthProvider = {
      * Remove local credentials and notify the auth server that the user logged out
      */
     async logout() {
-        const refreshToken = this.cookies.remove(JWT_REFRESH_TOKEN_COOKIE_NAME)
+        const refreshToken = this.cookies.get(JWT_REFRESH_TOKEN_COOKIE_NAME)
         this.cookies.remove(JWT_ACCESS_TOKEN_COOKIE_NAME);
         this.cookies.remove(JWT_REFRESH_TOKEN_COOKIE_NAME);
+        await this.blackListRefreshToken(refreshToken);
         return Promise.resolve();
     },
     async getIdentity() {
