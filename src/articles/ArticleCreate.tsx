@@ -1,4 +1,4 @@
-import {Create, DateInput, ImageField, ImageInput, SimpleForm, TextInput} from 'react-admin';
+import {Create, DateInput, ImageField, ImageInput, SimpleForm, TextInput, ArrayInput, SimpleFormIterator} from 'react-admin';
 import MarkdownInput from "../utils/customFields/MarkdownInput";
 
 export const ArticleCreate = () => {
@@ -8,6 +8,11 @@ export const ArticleCreate = () => {
                 <TextInput source="title" label="Title"/>
                 <TextInput source="description" label="Article description"/>
                 <DateInput source="created" label="Creation date" defaultValue={new Date()}/>
+                <ArrayInput source="tags">
+                    <SimpleFormIterator inline>
+                        <TextInput label="tag name" source="title" helperText={false}/>
+                    </SimpleFormIterator>
+                </ArrayInput>
                 <ImageInput
                     source="image"
                     label="Article image"
