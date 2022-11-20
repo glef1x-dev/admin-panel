@@ -1,5 +1,5 @@
 import Cookies from "universal-cookie";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import * as jose from "jose";
 import {CookieSetOptions} from "universal-cookie/cjs/types";
 
@@ -35,7 +35,7 @@ const JWTAuthProvider = {
     }),
     // Methods
     async login({username, password}: { username: string, password: string }) {
-        let response;
+        let response: AxiosResponse;
 
         try {
             response = await this.axiosInstance.post(
@@ -63,7 +63,7 @@ const JWTAuthProvider = {
         });
     },
     // when the dataProvider returns an error, check if this is an authentication error
-    async checkError(error: any) {
+    async checkError(error: unknown) {
         await this.checkAuth();
         return Promise.resolve();
     },
@@ -110,7 +110,7 @@ const JWTAuthProvider = {
     getPermissions: () => Promise.resolve(""),
 
     async verifyJWTToken(token: string) {
-        return this.axiosInstance.post(
+        return await this.axiosInstance.post(
             "/auth/token/verify/",
             JSON.stringify({
                 token: token,
