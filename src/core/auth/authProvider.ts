@@ -30,7 +30,7 @@ const JWTAuthProvider = {
         baseURL: API_URL,
         headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            Accept: "application/json"
         },
     }),
     // Methods
@@ -70,21 +70,16 @@ const JWTAuthProvider = {
     /**
      * When the user navigates, make sure that their credentials are still valid
      */
-    async checkAuth() {
-        try {
-            const accessToken = this.cookies.get(JWT_ACCESS_TOKEN_COOKIE_NAME);
-            if (!accessToken) {
-                throw new Error()
-            }
-            await this.verifyJWTToken(accessToken);
-        } catch (error) {
-            const refreshToken = this.cookies.get(JWT_REFRESH_TOKEN_COOKIE_NAME);
-            if (!refreshToken) {
-                return Promise.reject('Failed to authorize. Login required.');
-            }
+    checkAuth: async function () {
+        const accessToken = this.cookies.get(JWT_ACCESS_TOKEN_COOKIE_NAME);
 
-            const newAccessToken = await this.refreshToken(refreshToken);
-            this.cookies.set(JWT_ACCESS_TOKEN_COOKIE_NAME, newAccessToken);
+        if (!accessToken) {
+            return await this.refreshToken();
+        }
+        try {
+            await this.verifyJWTToken(accessToken)
+        } catch (e) {
+            await this.refreshToken()
         }
     },
     /**
@@ -118,14 +113,18 @@ const JWTAuthProvider = {
         );
     },
 
-    async refreshToken(refreshToken: string) {
+    async refreshToken() {
+        const refreshToken = this.cookies.get(JWT_REFRESH_TOKEN_COOKIE_NAME);
+        if (!refreshToken) {
+            return Promise.reject('Failed to authorize. Login required.');
+        }
         const response = await this.axiosInstance.post(
             "/auth/token/refresh/",
             JSON.stringify({
                 refresh: refreshToken,
             })
         );
-        return response.data.access;
+        this.cookies.set(JWT_ACCESS_TOKEN_COOKIE_NAME, response.data.access);
     },
     async blackListRefreshToken(refreshToken: string) {
         try {
