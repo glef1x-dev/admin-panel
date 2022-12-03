@@ -2,7 +2,7 @@ FROM node:19-alpine AS base
 
 LABEL MAINTAINER="Glib Garanin <glebgar567@gmail.com>"
 
-ARG PNPM_VERSION=7.15.0
+ARG PNPM_VERSION=7.17.1
 ARG API_URL
 ENV API_URL=${API_URL}
 
