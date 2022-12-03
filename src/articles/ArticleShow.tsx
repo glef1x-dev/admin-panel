@@ -6,24 +6,24 @@ import {
     Show,
     SimpleShowLayout,
     SingleFieldList,
-    TextField
+    TextField,
 } from 'react-admin';
 
 export const ArticleShow = () => {
     return (
         <Show>
             <SimpleShowLayout>
-                <TextField source="slug" label="slug"/>
-                <TextField source="title" label="title"/>
-                <TextField source="tags" label="tags"/>
-                <DateField source="created" sortable={true} label="creation date"/>
-                <DateField source="modified" sortable={true} label="last time modified"/>
+                <TextField source="slug" label="slug" />
+                <TextField source="title" label="title" />
+                <TextField source="tags" label="tags" />
+                <DateField source="created" sortable={true} label="creation date" />
+                <DateField source="modified" sortable={true} label="last time modified" />
                 <ArrayField source="tags">
                     <SingleFieldList>
-                        <ChipField source="title" label="tag name"/>
+                        <ChipField source="title" label="tag name" />
                     </SingleFieldList>
                 </ArrayField>
-                <ImageField source="image" label="image"/>
+                <ImageField source="image" label="image" />
             </SimpleShowLayout>
         </Show>
     );
