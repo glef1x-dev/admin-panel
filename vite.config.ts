@@ -7,6 +7,15 @@ export default defineConfig({
     build: {
         outDir: './dist',
         emptyOutDir: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    react: ['react', 'react-dom'],
+                    reactAdmin: ['ra-core', 'react-admin'],
+                    http: ['axios', 'axios-retry', 'universal-cookie', 'query-string']
+                }
+            }
+        }
     },
     plugins: [react()],
     define: Object.fromEntries(defineVars.map((key) => [key, JSON.stringify(process.env[key])])),
