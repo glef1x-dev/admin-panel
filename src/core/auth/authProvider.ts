@@ -5,8 +5,8 @@ import { AuthProvider as AuthProviderInterface } from 'ra-core';
 import { User, UserIdentityType } from './types';
 
 class JWTAuthProvider implements AuthProviderInterface {
-    cookies: Cookies;
-    axiosClient: AxiosInstance;
+    protected readonly cookies: Cookies;
+    protected readonly axiosClient: AxiosInstance;
 
     constructor() {
         this.cookies = new Cookies();
