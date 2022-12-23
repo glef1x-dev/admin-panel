@@ -24,7 +24,7 @@ export default function createAxiosClient(): AxiosInstance {
 
     axiosRetry(axiosClient, {
         retries: 2,
-        retryDelay: (retryCount) => retryCount * 1000,
+        retryDelay: axiosRetry.exponentialDelay,
         onRetry: (retryCount: number, error: AxiosError, requestConfig: AxiosRequestConfig) => {
             const originalConfig = error.config;
             originalConfig!.headers = {
