@@ -80,7 +80,6 @@ type FileType = {
  */
 const convertFileToBase64 = (file: FileType) =>
     new Promise((resolve, reject) => {
-        console.log(file, typeof file);
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
         reader.onerror = reject;

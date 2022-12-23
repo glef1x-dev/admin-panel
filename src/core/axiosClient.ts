@@ -15,7 +15,7 @@ export default function createAxiosClient(): AxiosInstance {
 
     axiosClient.interceptors.request.use((requestConfig): AxiosRequestConfig => {
         const token = window.localStorage.getItem(JWT_ACCESS_TOKEN_KEY);
-        if (requestConfig.headers != undefined) {
+        if (requestConfig.headers !== undefined) {
             requestConfig.headers.Authorization = token ? `Bearer ${token}` : '';
         }
 
@@ -36,7 +36,14 @@ export default function createAxiosClient(): AxiosInstance {
                 window.localStorage.setItem(JWT_ACCESS_TOKEN_KEY, response.data.access);
             });
         },
-        retryCondition: (error) => error.response!.status === 401 || error.response!.status >= 500,
+        retryCondition: (error) => {
+            if (error.response === undefined) {
+                // Should retry
+                return true;
+            }
+
+            return error.response.status === 401 || error.response.status >= 500;
+        },
     });
 
     return axiosClient;

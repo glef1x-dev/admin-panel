@@ -60,10 +60,8 @@ class JWTAuthProvider implements AuthProviderInterface {
      * Remove local credentials and notify the auth server that the user logged out
      */
     async logout(): Promise<void> {
-        this.cookies.remove('refresh', {
-            httpOnly: true,
-        });
         window.localStorage.removeItem(JWT_ACCESS_TOKEN_KEY);
+        await this.blackListRefreshToken();
         return Promise.resolve();
     }
 
@@ -94,6 +92,10 @@ class JWTAuthProvider implements AuthProviderInterface {
         const response = await this.axiosClient.post('/auth/token/refresh/');
         window.localStorage.setItem(JWT_ACCESS_TOKEN_KEY, response.data.access);
         return response.data.access as string;
+    }
+
+    async blackListRefreshToken(): Promise<void> {
+        await this.axiosClient.post('/auth/token/blacklist/');
     }
 }
 

@@ -114,26 +114,26 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
     }
 
     async update(resource: ResourceType, params: UpdateParams) {
-        const response = await this.axiosClient.patch(`${this.getOptions(resource).endpoint}/${params.id}/`, {
-            body: JSON.stringify(params.data),
-        });
+        const response = await this.axiosClient.patch(
+            `${this.getOptions(resource).endpoint}/${params.id}/`,
+            JSON.stringify(params.data),
+        );
         return { data: response.data, id: response.data[this.getOptions(resource).idFieldName] };
     }
 
     updateMany(resource: ResourceType, params: UpdateManyParams) {
         return Promise.all(
             params.ids.map((id) =>
-                this.axiosClient.patch(`${this.getOptions(resource).endpoint}/${id}/`, {
-                    body: JSON.stringify(params.data),
-                }),
+                this.axiosClient.patch(`${this.getOptions(resource).endpoint}/${id}/`, JSON.stringify(params.data)),
             ),
         ).then((responses) => ({ data: responses.map((response) => response.data.id) }));
     }
 
     async create(resource: ResourceType, params: CreateParams) {
-        const response = await this.axiosClient.post(this.getOptions(resource).endpoint + '/', {
-            body: JSON.stringify(params.data),
-        });
+        const response = await this.axiosClient.post(
+            this.getOptions(resource).endpoint + '/',
+            JSON.stringify(params.data),
+        );
         return {
             data: { ...params.data, id: response.data[this.getOptions(resource).idFieldName] },
         };
