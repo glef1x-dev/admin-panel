@@ -16,6 +16,7 @@ import { AxiosInstance, AxiosResponse } from 'axios';
 import { GetOneParams } from 'ra-core/dist/cjs/types';
 import { PaginationPayload, SortPayload } from 'ra-core/src/types';
 import createAxiosClient from '../../axiosClient';
+import { difference } from '../../../utils/shared-utils';
 
 type IdType = number | string;
 
@@ -114,9 +115,10 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
     }
 
     async update(resource: ResourceType, params: UpdateParams) {
+        console.log(difference(params.previousData, params.data));
         const response = await this.axiosClient.patch(
             `${this.getOptions(resource).endpoint}/${params.id}/`,
-            JSON.stringify(params.data),
+            JSON.stringify(difference(params.previousData, params.data)),
         );
         return { data: response.data, id: response.data[this.getOptions(resource).idFieldName] };
     }

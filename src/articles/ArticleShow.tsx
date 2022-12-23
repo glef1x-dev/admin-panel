@@ -15,7 +15,6 @@ export const ArticleShow = () => {
             <SimpleShowLayout>
                 <TextField source="slug" label="slug" />
                 <TextField source="title" label="title" />
-                <TextField source="tags" label="tags" />
                 <DateField source="created" sortable={true} label="creation date" />
                 <DateField source="modified" sortable={true} label="last time modified" />
                 <ArrayField source="tags">

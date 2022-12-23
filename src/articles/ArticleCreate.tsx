@@ -7,6 +7,7 @@ import {
     TextInput,
     ArrayInput,
     SimpleFormIterator,
+    required,
 } from 'react-admin';
 import MarkdownInput from '../utils/customFields/MarkdownInput';
 
@@ -14,9 +15,9 @@ export const ArticleCreate = () => {
     return (
         <Create>
             <SimpleForm>
-                <TextInput source="title" label="Title" />
+                <TextInput source="title" label="Title" validate={required()} />
                 <TextInput source="description" label="Article description" />
-                <DateInput source="created" label="Creation date" defaultValue={new Date()} />
+                <DateInput source="created" label="Creation date" defaultValue={new Date()} validate={required()} />
                 <ArrayInput source="tags">
                     <SimpleFormIterator inline>
                         <TextInput label="tag name" source="title" helperText={false} />
@@ -28,6 +29,7 @@ export const ArticleCreate = () => {
                     accept="image/*"
                     placeholder={<p>Drop your file here</p>}
                     multiple={false}
+                    validate={required()}
                 >
                     <ImageField source="src" title="title" />
                 </ImageInput>
@@ -37,6 +39,7 @@ export const ArticleCreate = () => {
                     }}
                     label="body"
                     source="body"
+                    validate={required()}
                 />
             </SimpleForm>
         </Create>
