@@ -95,7 +95,19 @@ class JWTAuthProvider implements AuthProviderInterface {
     }
 
     async blackListRefreshToken(): Promise<void> {
-        await this.axiosClient.post('/auth/token/blacklist/');
+        try {
+            await this.axiosClient.post('/auth/token/blacklist/');
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response?.status === 400) {
+                    // It doesn't really matter if we really blacklisted token
+                    // If we get 400 response it just says that token was blacklisted
+                    // so we don't care about this case
+                    return Promise.resolve();
+                }
+            }
+            throw err;
+        }
     }
 }
 
