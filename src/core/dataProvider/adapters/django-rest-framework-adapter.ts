@@ -23,7 +23,7 @@ type IdType = number | string;
 const getPaginationQuery = (pagination: PaginationPayload) => {
     return {
         page: pagination.page,
-        size: pagination.perPage,
+        page_size: pagination.perPage,
     };
 };
 
