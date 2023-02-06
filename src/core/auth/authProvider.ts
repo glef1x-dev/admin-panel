@@ -1,19 +1,16 @@
-import Cookies from 'universal-cookie';
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import createAxiosClient, { JWT_ACCESS_TOKEN_KEY } from '../axiosClient';
-import { AuthProvider as AuthProviderInterface } from 'ra-core';
-import { User, UserIdentityType } from './types';
+import axios, {AxiosInstance, AxiosResponse} from 'axios';
+import createAxiosClient, {JWT_ACCESS_TOKEN_KEY} from '../axiosClient';
+import {AuthProvider as AuthProviderInterface} from 'ra-core';
+import {User, UserIdentityType} from './types';
 
 class JWTAuthProvider implements AuthProviderInterface {
-    protected readonly cookies: Cookies;
     protected readonly axiosClient: AxiosInstance;
 
     constructor() {
-        this.cookies = new Cookies();
         this.axiosClient = createAxiosClient();
     }
 
-    async login({ username, password }: { username: string; password: string }) {
+    async login({username, password}: { username: string; password: string }) {
         let response: AxiosResponse;
 
         try {
@@ -26,10 +23,10 @@ class JWTAuthProvider implements AuthProviderInterface {
             );
         } catch (e) {
             if (axios.isAxiosError(e)) {
-                return Promise.reject({ message: e.response?.data.message });
+                return Promise.reject({message: e.response?.data.message});
             }
             console.error(e);
-            return Promise.reject({ message: 'Unknown error' });
+            return Promise.reject({message: 'Unknown error'});
         }
         window.localStorage.setItem(JWT_ACCESS_TOKEN_KEY, response.data.access);
     }
