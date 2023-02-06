@@ -70,10 +70,12 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
             ...getPaginationQuery(params.pagination),
             ...getOrderingQuery(params.sort),
         };
-        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}/`;
+        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}`;
 
         return this.axiosClient.get(url).then((response) => ({
-            data: response.data.results.map((obj) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })),
+            data: response.data.results.map(
+                (obj) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })
+            ),
             total: response.data.count,
         }));
     }
@@ -105,7 +107,7 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
             ...getOrderingQuery(params.sort),
             [params.target]: params.id,
         };
-        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}/`;
+        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}`;
 
         const response = await this.axiosClient.get(url);
         return {
@@ -164,6 +166,7 @@ function normalizeOptionsMapping(options: Options | null): Options {
         {
             get: function (target, name) {
                 if (name in target) {
+                    //@ts-expect-error type doesn't really matter
                     return target[name];
                 }
 
