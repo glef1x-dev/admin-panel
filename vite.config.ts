@@ -12,7 +12,7 @@ export default defineConfig({
                 manualChunks: {
                     react: ['react', 'react-dom'],
                     reactAdmin: ['ra-core', 'react-admin'],
-                    http: ['axios', 'axios-retry', 'universal-cookie', 'query-string']
+                    http: ['axios', 'axios-retry', 'query-string']
                 }
             }
         }

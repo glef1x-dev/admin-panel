@@ -1,6 +1,6 @@
 //** Data provider wrapper over django rest API */
 
-import { stringify } from 'query-string';
+import queryString from 'query-string';
 import {
     CreateParams,
     DataProvider,
@@ -70,7 +70,7 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
             ...getPaginationQuery(params.pagination),
             ...getOrderingQuery(params.sort),
         };
-        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}`;
+        const url = `${this.getOptions(resource).endpoint}/?${queryString.stringify(query)}`;
 
         return this.axiosClient.get(url).then((response) => ({
             data: response.data.results.map(
@@ -107,7 +107,7 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
             ...getOrderingQuery(params.sort),
             [params.target]: params.id,
         };
-        const url = `${this.getOptions(resource).endpoint}/?${stringify(query)}`;
+        const url = `${this.getOptions(resource).endpoint}/?${queryString.stringify(query)}`;
 
         const response = await this.axiosClient.get(url);
         return {
