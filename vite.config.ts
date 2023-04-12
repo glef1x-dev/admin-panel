@@ -10,8 +10,8 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    react: ['react', 'react-dom'],
-                    reactAdmin: ['ra-core', 'react-admin'],
+                    rr: ['react', 'react-dom'],
+                    ra: ['ra-core', 'react-admin'],
                     http: ['axios', 'axios-retry', 'query-string']
                 }
             }

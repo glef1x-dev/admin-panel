@@ -3,6 +3,11 @@ import createAxiosClient, {JWT_ACCESS_TOKEN_KEY} from '../axiosClient';
 import {AuthProvider as AuthProviderInterface} from 'ra-core';
 import {User, UserIdentityType} from './types';
 
+type UserCredentials = {
+    username: string;
+    password: string;
+}
+
 class JWTAuthProvider implements AuthProviderInterface {
     protected readonly axiosClient: AxiosInstance;
 
@@ -10,16 +15,13 @@ class JWTAuthProvider implements AuthProviderInterface {
         this.axiosClient = createAxiosClient();
     }
 
-    async login({username, password}: { username: string; password: string }) {
+    async login(credentials: UserCredentials) {
         let response: AxiosResponse;
 
         try {
             response = await this.axiosClient.post(
                 '/auth/token/',
-                JSON.stringify({
-                    username,
-                    password,
-                }),
+                JSON.stringify(credentials),
             );
         } catch (e) {
             if (axios.isAxiosError(e)) {
@@ -32,7 +34,7 @@ class JWTAuthProvider implements AuthProviderInterface {
     }
 
     // when the dataProvider returns an error, check if this is an authentication error
-    checkError(error: unknown): Promise<void> {
+    checkError(): Promise<void> {
         return Promise.resolve();
     }
 
@@ -46,6 +48,7 @@ class JWTAuthProvider implements AuthProviderInterface {
             await this.refreshToken();
             return;
         }
+
         try {
             await this.verifyJWTToken(accessToken);
         } catch (e) {
@@ -66,10 +69,9 @@ class JWTAuthProvider implements AuthProviderInterface {
         const response = await this.axiosClient.get('/users/me/');
         const user = response.data as User;
 
-        return {
-            ...user,
-            fullName: user.firstName + user.lastName,
-        };
+        return Object.assign(user, {
+            fullName: user.firstName + user.lastName
+        });
     }
 
     async getPermissions(): Promise<string> {

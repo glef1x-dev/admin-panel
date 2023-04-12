@@ -16,7 +16,7 @@ import { AxiosInstance, AxiosResponse } from 'axios';
 import { GetOneParams } from 'ra-core/dist/cjs/types';
 import { PaginationPayload, SortPayload } from 'ra-core/src/types';
 import createAxiosClient from '../../axiosClient';
-import { difference } from '../../../utils/shared-utils';
+import { difference } from '../../../utils/object-difference';
 
 type IdType = number | string;
 
@@ -43,13 +43,13 @@ export const getOrderingQuery = (sort: SortPayload) => {
 };
 
 type Options = {
-    [key: string]: {
+    [key: string | symbol]: {
         endpoint: string;
         idFieldName: string;
     };
 };
 
-export default class DjangoRestFrameworkDataProvider<ResourceType extends string>
+export default class DjangoRestFrameworkDataProvider<ResourceType extends string = string>
     implements DataProvider<ResourceType>
 {
     private readonly optionsMapping: Options;
@@ -74,7 +74,7 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
 
         return this.axiosClient.get(url).then((response) => ({
             data: response.data.results.map(
-                (obj) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })
+                (obj: Record<string, unknown>) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })
             ),
             total: response.data.count,
         }));
@@ -111,13 +111,12 @@ export default class DjangoRestFrameworkDataProvider<ResourceType extends string
 
         const response = await this.axiosClient.get(url);
         return {
-            data: response.data.results.map((obj) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })),
+            data: response.data.results.map((obj: Record<string, unknown>) => ({ ...obj, id: obj[this.getOptions(resource).idFieldName] })),
             total: response.data.count,
         };
     }
 
     async update(resource: ResourceType, params: UpdateParams) {
-        console.log(difference(params.previousData, params.data));
         const response = await this.axiosClient.patch(
             `${this.getOptions(resource).endpoint}/${params.id}/`,
             JSON.stringify(difference(params.previousData, params.data)),
@@ -164,9 +163,8 @@ function normalizeOptionsMapping(options: Options | null): Options {
     return new Proxy(
         {},
         {
-            get: function (target, name) {
+            get: function (target: Options, name) {
                 if (name in target) {
-                    //@ts-expect-error type doesn't really matter
                     return target[name];
                 }
 

@@ -1,23 +1,14 @@
-import {
-    CreateParams,
-    DataProvider,
-    DeleteManyParams,
-    DeleteParams,
-    GetListParams,
-    GetManyParams,
-    GetManyReferenceParams,
-    UpdateManyParams,
-    UpdateParams,
-} from 'ra-core';
-import { GetOneParams } from 'ra-core/dist/cjs/types';
+import {CreateParams, DataProvider,} from 'ra-core';
+import DjangoRestFrameworkDataProvider from "../adapters/django-rest-framework-adapter";
 
 export default class ImageUploadDataProviderDecorator<ResourceType extends string>
-    implements DataProvider<ResourceType>
+    extends DjangoRestFrameworkDataProvider implements DataProvider<ResourceType>
 {
-    constructor(protected dataProvider: DataProvider) {
+    constructor(protected dataProvider: DataProvider<ResourceType>) {
+        super();
         this.dataProvider = dataProvider;
     }
-
+    
     async create(resource: ResourceType, params: CreateParams) {
         if (resource !== 'Articles') {
             // fallback to the default implementation
@@ -32,38 +23,6 @@ export default class ImageUploadDataProviderDecorator<ResourceType extends strin
                 },
             });
         });
-    }
-
-    async getList(resource: ResourceType, params: GetListParams) {
-        return this.dataProvider.getList(resource, params);
-    }
-
-    async getOne(resource: ResourceType, params: GetOneParams) {
-        return this.dataProvider.getOne(resource, params);
-    }
-
-    async getMany(resource: ResourceType, params: GetManyParams) {
-        return this.dataProvider.getMany(resource, params);
-    }
-
-    async getManyReference(resource: ResourceType, params: GetManyReferenceParams) {
-        return this.dataProvider.getManyReference(resource, params);
-    }
-
-    async update(resource: ResourceType, params: UpdateParams) {
-        return this.dataProvider.update(resource, params);
-    }
-
-    updateMany(resource: ResourceType, params: UpdateManyParams) {
-        return this.dataProvider.updateMany(resource, params);
-    }
-
-    async delete(resource: ResourceType, params: DeleteParams) {
-        return this.dataProvider.delete(resource, params);
-    }
-
-    async deleteMany(resource: ResourceType, params: DeleteManyParams) {
-        return this.dataProvider.deleteMany(resource, params);
     }
 }
 
