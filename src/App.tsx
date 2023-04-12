@@ -7,10 +7,12 @@ import { ArticleShow } from './articles/ArticleShow';
 import { ArticleCreate } from './articles/ArticleCreate';
 import { ArticleEdit } from './articles/ArticleEdit';
 
-const App = () => (
+function App() {
+  return (
     <Admin title="glef1x.xyz admin panel" dataProvider={dataProvider} authProvider={new JWTAuthProvider()} requireAuth>
-        <Resource name="Articles" list={ArticleList} edit={ArticleEdit} show={ArticleShow} create={ArticleCreate} />
+      <Resource name="Articles" list={ArticleList} edit={ArticleEdit} show={ArticleShow} create={ArticleCreate} />
     </Admin>
-);
+  );
+}
 
 export default App;

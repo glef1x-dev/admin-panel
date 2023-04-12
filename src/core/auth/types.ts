@@ -11,5 +11,4 @@ export interface User {
     [key: string]: unknown;
 }
 
-
 export type UserIdentityType = User | UserIdentity;

@@ -1,18 +1,7 @@
-import {
-  ArrayField,
-  ChipField,
-  DateField,
-  ImageField,
-  Show,
-  SimpleShowLayout,
-  SingleFieldList,
-  TextField,
-} from 'react-admin';
-
-export function ArticleShow() {
+export default function UserList(): JSX.Element {
   return (
-    <Show>
-      <SimpleShowLayout>
+    <List>
+      <Datagrid rowClick="edit">
         <TextField source="slug" label="slug" />
         <TextField source="title" label="title" />
         <DateField source="created" sortable label="creation date" />
@@ -23,7 +12,7 @@ export function ArticleShow() {
           </SingleFieldList>
         </ArrayField>
         <ImageField source="image" label="image" />
-      </SimpleShowLayout>
-    </Show>
+      </Datagrid>
+    </List>
   );
 }
