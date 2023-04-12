@@ -26,7 +26,7 @@ export const ArticleCreate = () => {
                 <ImageInput
                     source="image"
                     label="Article image"
-                    accept="image/*"
+                    accept={["image/jpeg", "image/png", "image/webp"]}
                     placeholder={<p>Drop your file here</p>}
                     multiple={false}
                     validate={required()}
